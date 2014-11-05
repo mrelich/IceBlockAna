@@ -34,22 +34,31 @@ obj/%_Dict.cxx:
 	rootcint -f $@ -c $(links) $+
 
 #---- CINT ----#
-rootclass = $(inc)/Event.h $(inc)/Antenna.h $(inc)/MetaData.h
-obj/Event_Dict.cxx: $(rootclass) $(inc)/LinkDef.h
-obj/Antenna_Dict.cxx: $(rootclass) $(inc)/LinkDef.h
-obj/MetaData_Dict.cxx: $(rootclass) $(inc)/LinkDef.h
+rootclass = 			\
+	$(inc)/Event.h 		\
+	$(inc)/Antenna.h 	\
+	$(inc)/MetaData.h	\
+	$(inc)/Summary.h
+
+obj/Event_Dict.cxx: 	$(rootclass) $(inc)/LinkDef.h
+obj/Antenna_Dict.cxx:	$(rootclass) $(inc)/LinkDef.h
+obj/MetaData_Dict.cxx:  $(rootclass) $(inc)/LinkDef.h
+obj/Summary_Dict.cxx: 	$(rootclass) $(inc)/LinkDef.h
 
 #---- OBJ ----#
-obj/Classes_Dict.o: 	\
-	obj/Event_Dict.cxx \
-	obj/Antenna_Dict.cxx \
-	obj/MetaData_Dict.cxx
+obj/Classes_Dict.o: 		\
+	obj/Event_Dict.cxx 	\
+	obj/Antenna_Dict.cxx 	\
+	obj/MetaData_Dict.cxx 	\
+	obj/Summary_Dict.cxx
+
 
 #---- Shared Obj ----#
 obj/Classes_Dict.so: 	 			\
 	obj/Event_Dict.cxx $(inc)/Event.h  	\
 	obj/Antenna_Dict.cxx $(inc)/Antenna.h 	\
-	obj/MetaData_Dict.cxx $(inc)/MetaData.h	
+	obj/MetaData_Dict.cxx $(inc)/MetaData.h	\
+	obj/Summary_Dict.cxx $(inc)/Summary.h
 
 #---- ROOT Objects ----#
 #obj/Event_Dict.cxx: $(rootclass) $(inc)/LinkDef.h

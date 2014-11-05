@@ -3,6 +3,9 @@
 		shared libraries as well.
 	* Committing skeleton of TreeMaker
 	* Committing skeleton of the file reader
+	* Forgot src directory all together
+	* Working version committed. Need to add something to be able to readback vector<TH1F*>
+		in interactive mode.
 
 2014-11-04 Matt:
 	* Adding structure and initial skeleton of code.  Subject to change.

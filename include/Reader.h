@@ -9,6 +9,12 @@
 #include <fstream>
 #include <string>
 #include "TH1F.h"
+#include <iostream>
+#include <cstring>
+#include <stdlib.h>
+#include <vector>
+#include "Event.h"
+#include <cmath>
 
 class Reader
 {
@@ -28,7 +34,7 @@ class Reader
 		   float &tStep);    // Size of timing step
 
   // Retrieve Event info
-  void getEventInfo(TH1F* hist);
+  void getEventInfo(Event* evt, int nTimeSteps, float timeStep);
 
   
  protected:

@@ -11,10 +11,13 @@
 #include "Event.h"
 #include "MetaData.h"
 #include "Reader.h"
+#include "Summary.h"
 
 // Root
 #include "TTree.h"
 #include "TFile.h"
+#include "TString.h"
+#include "TH1F.h"
 
 // standard
 #include <iostream>
@@ -40,9 +43,13 @@ class TreeMaker
   // Fill summary information
   void fillSummary();
 
+  // Calcualte efield -- move to package later
+  TH1F* getEfield(TH1F* A, int num);
+
  private:
 
   Reader* m_reader;   // Object to read in Geant4 output
+  MetaData* m_MD;     // Object for meta data
   TFile* m_outfile;   // Output file for this script
 
 };
