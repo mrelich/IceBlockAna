@@ -20,24 +20,24 @@ class Antenna : public TObject
   virtual ~Antenna(){ reset(); };
 
   // Constructor
-  Antenna(float x, float y, float z,
-	  int nSteps, float stepSize,
-	  float startTime)
-    {
-      // Set Pos
-      this->SetPos(x,y,z);
-  
-      // Hist name
-      stringstream name;
-      name << "Ant_" << x << "_" 
-	   << y <<  "_" << z;
-      
-      // Hist min max
-      float tmin = startTime - stepsSize/2.;
-      float tmax = tmin + nSteps * stepSzie;
-      this->m_VP = new TH1F(name.str().c_str(),"",
-			    nSteps,tmin,tmax);
-    };
+  void initialize(float x, float y, float z,
+		  int nSteps, float stepSize,
+		  float startTime)
+  {
+    // Set Pos
+    this->setPos(x,y,z);
+    
+    // Hist name
+    std::stringstream name;
+    name << "Ant_" << x << "_" 
+	 << y <<  "_" << z;
+    
+    // Hist min max
+    float tmin = startTime - stepSize/2.;
+    float tmax = tmin + nSteps * stepSize;
+    this->m_VP = new TH1F(name.str().c_str(),"",
+			  nSteps,tmin,tmax);
+  };
 
   // Method to reset vars
   void reset(){
@@ -61,7 +61,7 @@ class Antenna : public TObject
   float getX() { return m_x;  };
   float getY() { return m_y;  };
   float getZ() { return m_z;  };
-  float getVP(){ return m_VP; };
+  TH1F* getVP(){ return m_VP; };
 
   ClassDef(Antenna, 1);
 

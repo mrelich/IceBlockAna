@@ -7,6 +7,7 @@
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 
 #include "TObject.h"
+#include <iostream>
 
 class MetaData : public TObject
 {
@@ -14,17 +15,23 @@ class MetaData : public TObject
  public:
   
   // Default constructor / destructor
-  MetaData(){};
+  MetaData(){ m_nEvents = 0; };
   virtual ~MetaData(){};
 
-  // Constructor
-  MetaData(int nevts, int nprim, int energy,
-	   int nSteps, float ss){
+  // Set all variables
+  void initialize(int nevts, int nprim, float energy,
+		  int nSteps, float ss){
     m_nEvents  = nevts;
     m_nPrimary = nprim;
     m_Energy   = energy;
     m_nSteps   = nSteps;
     m_stepSize = ss;
+    std::cout<<"Setting events: "<<m_nEvents<<std::endl;
+  };
+
+  // Print
+  void print(){
+    std::cout<<m_nEvents<<std::endl;
   };
 
   // Setting
@@ -35,25 +42,25 @@ class MetaData : public TObject
   void setStepSize(float ss) { m_stepSize = ss;     };
 
   // Getting
-  void getNEvents() { return m_nEvents;  };
-  void getNPrimary(){ return m_nPrimary; };
-  void getEnergy()  { return m_Energy;   };
-  void getNSteps()  { return m_nSteps;   };
-  void getStepSize(){ return m_stepSize; };
-  
-  ClassDef(MetaData, 1);
+  int getNEvents()   { return m_nEvents;  };
+  int getNPrimary()  { return m_nPrimary; };
+  float getEnergy()  { return m_Energy;   };
+  int getNSteps()    { return m_nSteps;   };
+  float getStepSize(){ return m_stepSize; };
   
  protected:
   
   // Run parameters
   int m_nEvents; 
   int m_nPrimary; 
-  int m_Energy;
+  float m_Energy;
 
   // Timing information
   int m_nSteps;
   float m_stepSize;
   
+  ClassDef(MetaData, 1);
+
 };
 
 #endif

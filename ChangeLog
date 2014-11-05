@@ -1,3 +1,9 @@
+2014-11-05 Matt:
+	* Was being stupid with the makefile. Now everything is working ok and I can get
+		shared libraries as well.
+	* Committing skeleton of TreeMaker
+	* Committing skeleton of the file reader
+
 2014-11-04 Matt:
 	* Adding structure and initial skeleton of code.  Subject to change.
 	* Adding Skeleton makefile and LinkDef

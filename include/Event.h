@@ -19,8 +19,8 @@ class Event : public TObject
   Event(){ reset(); };
   virtual ~Event(){ reset(); };
 
-  // Constructor
-  Event(int evtNum){ m_evtNum = evtNum; };
+  // Initialize
+  void initialize(int evtNum) { m_evtNum = evtNum; };
 
   // Method to reset event info
   void reset(){
