@@ -6,6 +6,7 @@
 	* Verified FTFD is working, FTTD has not been checked yet.
 	* Verified FTTD is working. Had to remove "scale" from old code. I think I was just making
 		some error before that somehow cancelled out.
+	* Adding options to get correct scaling down.
 
 
 2014-11-05 Matt:
