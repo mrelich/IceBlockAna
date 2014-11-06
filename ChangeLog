@@ -4,6 +4,8 @@
 	* Added Sumw2 setting for histograms
 	* Adding Tools package.  Will expand on this later after more tests.
 	* Verified FTFD is working, FTTD has not been checked yet.
+	* Verified FTTD is working. Had to remove "scale" from old code. I think I was just making
+		some error before that somehow cancelled out.
 
 
 2014-11-05 Matt:

@@ -30,11 +30,12 @@ TH1F* Tools::getFTFD(TH1F* h_TD)
   TH1F* ft_fixed  = new TH1F(ft_name,"",nbinsft,
 			     xminft/(xmax-xmin),
 			     xmaxft/(xmax-xmin));
-  
+  ft_fixed->Sumw2();
+
   // Now fill the fixed FT
   for(int bin=1; bin<=nbinsft; ++bin){
 
-    float bcon = ft->GetBinContent(bin)/sqrt(nbins);
+    float bcon = ft->GetBinContent(bin)/TMath::Sqrt(nbins);
     float bcen = ft->GetBinCenter(bin)/(xmax-xmin);
 
     int newbin = ft_fixed->FindBin(bcen);
@@ -56,7 +57,8 @@ TH1F* Tools::getFTFD(TH1F* h_TD)
 // Get the fourier transform for going back to time-domain
 // and hacking off some frequency
 //--------------------------------------------------------//
-TH1F* Tools::getFTTD(TH1F* h_TD, TH1F* h_FD, float fmin, float fmax)
+TH1F* Tools::getFTTD(TH1F* h_TD, TH1F* h_FD,
+		     float fmin, float fmax)
 {
 
   // getFTFD(...) must be called before using this method
@@ -75,7 +77,6 @@ TH1F* Tools::getFTTD(TH1F* h_TD, TH1F* h_FD, float fmin, float fmax)
   // Get binning info
   float xmin  = h_TD->GetXaxis()->GetXmin();
   float xmax  = h_TD->GetXaxis()->GetXmax();
-  float scale = 1/(xmax-xmin);
   int ntbins  = h_TD->GetNbinsX();
 
   // Get the real and imaginary components
@@ -83,6 +84,11 @@ TH1F* Tools::getFTTD(TH1F* h_TD, TH1F* h_FD, float fmin, float fmax)
   Double_t *re_full = new Double_t[nfbins];
   Double_t *im_full = new Double_t[nfbins];
   fft->GetPointsComplex(re_full, im_full);
+
+  cout<<h_FD->GetNbinsX()<<" "
+      <<h_FD->GetXaxis()->GetXmin()
+      <<" "<<h_FD->GetXaxis()->GetXmax()
+      <<endl;
   
   // Now loop over real and imaginary parts
   // and reset the bin content dependent on
@@ -91,7 +97,7 @@ TH1F* Tools::getFTTD(TH1F* h_TD, TH1F* h_FD, float fmin, float fmax)
     
     // Get the frequency with appropriate scale
     // to take it bck to Hz
-    double f = h_FD->GetBinCenter(n+1) * scale;
+    double f = h_FD->GetBinCenter(n+1);
     
     // Check if frequency is in range we are
     // after.  Note default = -999
@@ -108,25 +114,28 @@ TH1F* Tools::getFTTD(TH1F* h_TD, TH1F* h_FD, float fmin, float fmax)
   }// end loop over points
 
   // Now transform the points back to time-domain
-  TVirtualFFT* fft_back = TVirtualFFT::FFT(1, &ntbins, "C2R M K");
+  TVirtualFFT* fft_back = TVirtualFFT::FFT(1, &nfbins, "C2R M K");
   fft_back->SetPointsComplex(re_full, im_full);
   fft_back->Transform();
   TH1F* h_back = (TH1F*) TH1::TransformHisto(fft_back,NULL,"Re");
+
 
   // Now again, root sucks and doesn't put this into
   // usable format. So format it back
   TString backname   = TString(h_FD->GetName()) + "_back";
   TH1F* h_back_fixed = new TH1F(backname,"",ntbins,xmin,xmax);
-  h_back->SetName(backname);
+  h_back->Sumw2();
+
+  h_back_fixed->SetName(backname);
   double shift = (xmax-xmin)/ntbins;
   for(int bin=1; bin<=ntbins; ++bin){
     float bcon = h_back->GetBinContent(bin) / ntbins;
-    float berr = h_back->GetBinError(bin) / ntbins;
-    float bcen = h_back->GetBinCenter(bin) * shift;
+    float bcen = xmin + h_back->GetBinCenter(bin) * shift;
+
     
     int newbin = h_back_fixed->FindBin(bcen);
     h_back_fixed->SetBinContent(newbin,bcon);
-    h_back_fixed->SetBinError(newbin,berr);
+    h_back_fixed->SetBinError(newbin,0);  // Again, fix errors later
   }// end fix
 
   // clean up
@@ -140,3 +149,4 @@ TH1F* Tools::getFTTD(TH1F* h_TD, TH1F* h_FD, float fmin, float fmax)
   return h_back_fixed;
 
 }
+
