@@ -149,14 +149,7 @@ void TreeMaker::fillSummary()
 	summary->addA( (TH1F*) A->Clone((hname+"_avg")) );
       }
       else{
-	int nbins = A->GetNbinsX();
-	TH1F* A_summary = summary->getA(iA);
-	for(int bin=1; bin<=nbins; ++bin){
-	  float bcen = A->GetBinCenter(bin);
-	  float bcon = A->GetBinContent(bin);
-	  
-	  A_summary->Fill(bcen,bcon);
-	}// end loop over bins
+	summary->getA(iA)->Add(A);
       }
       
     }// end loop over antennas
@@ -188,6 +181,7 @@ void TreeMaker::fillSummary()
 // Method to calculate the e-field from vector 
 // potential. 
 // TODO: Move to tools package
+// TODO: Change name of E-field histogram
 //--------------------------------------------------//
 TH1F* TreeMaker::getEfield(TH1F* A, int num)
 {
@@ -208,12 +202,23 @@ TH1F* TreeMaker::getEfield(TH1F* A, int num)
 
   // now loop and calculate the E field
   for(int bin=1; bin<A->GetNbinsX(); ++bin){
-    float A0 = A->GetBinContent(bin);
-    float A1 = A->GetBinContent(bin+1);
-    float t0 = A->GetBinCenter(bin);
-    float t1 = A->GetBinCenter(bin+1);
+    float A0    = A->GetBinContent(bin);
+    float A1    = A->GetBinContent(bin+1);
+    float A0err = A->GetBinError(bin);
+    float A1err = A->GetBinError(bin+1);
+    float t0    = A->GetBinCenter(bin);
+    float t1    = A->GetBinCenter(bin+1);
 
-    E->Fill(t1+t0/2., (A1-A0)/(bw*conv));
+    // Get new values including errors.
+    // Treat bin-to-bin errors as uncorrelated
+    int newbin = E->FindBin((t1+t0)/2.);
+    float Evar = (A1-A0)/(bw*conv);
+    float Eerr = sqrt(pow(A1err/(bw*conv),2) +
+		      pow(A0err/(bw*conv),2));
+
+    // Reset the bin content
+    E->SetBinContent(newbin, Evar);
+    E->SetBinError(newbin, Eerr);
   }
 
   return E;

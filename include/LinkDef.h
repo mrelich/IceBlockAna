@@ -14,7 +14,7 @@
 
 #pragma link C++ class std::vector<Antenna>+;
 #pragma link C++ class std::vector<Antenna*>+;
-//#pragme link C++ class std::vector<TH1F*>;
+#pragma link C++ class std::vector<TH1F*>;
 
 
 #endif

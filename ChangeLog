@@ -1,3 +1,9 @@
+2014-11-06 Matt:
+	* E-field calculated now with errors
+	* Added vector<TH1F*> to linkdef, now can read them back in interactive root mode
+	* Added Sumw2 setting for histograms
+
+
 2014-11-05 Matt:
 	* Was being stupid with the makefile. Now everything is working ok and I can get
 		shared libraries as well.

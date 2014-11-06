@@ -47,6 +47,7 @@ class Antenna : public TObject
     float tmax = tmin + nSteps * stepSize;
     m_VP = new TH1F(name.str().c_str(),"",
 		    nSteps,tmin,tmax);
+    m_VP->Sumw2();
 
     // Set flag to true
     m_initialized = true;
