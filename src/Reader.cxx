@@ -26,7 +26,9 @@ Reader::Reader(string infname) :
 	   >> m_pEnergy
 	   >> m_nAnt
 	   >> m_nSteps
-	   >> m_tStep;
+	   >> m_tStep; 
+
+  m_tStep *= 1e-9; // convert ns --> s
   
 }
 
@@ -141,7 +143,7 @@ void Reader::getEventInfo(Event* evt, int nTimeSteps,
     //if(counter > 4) continue;
 
     // Otherwise we have the event information
-    time = atof(tokens[0]);
+    time = atof(tokens[0]) * 1e-9;
     Ax   = atof(strtok(0," "));
     Ay   = atof(strtok(0," "));
     Az   = atof(strtok(0," "));

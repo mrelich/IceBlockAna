@@ -2,6 +2,8 @@
 	* E-field calculated now with errors
 	* Added vector<TH1F*> to linkdef, now can read them back in interactive root mode
 	* Added Sumw2 setting for histograms
+	* Adding Tools package.  Will expand on this later after more tests.
+	* Verified FTFD is working, FTTD has not been checked yet.
 
 
 2014-11-05 Matt:

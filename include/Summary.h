@@ -49,10 +49,18 @@ class Summary : public TObject
     return m_A.size();
   };
 
+  // Add angular information
+  void addAngle(float ang){ m_angles.push_back(ang); };
+
+  // Access angles
+  float getAngle(int i)         { return m_angles.at(i); };
+  std::vector<float> getAngles(){ return m_angles; };
+
  private:
 
   std::vector<TH1F*> m_A;
   std::vector<TH1F*> m_E;
+  std::vector<float> m_angles;
 
   ClassDef(Summary,1);
 

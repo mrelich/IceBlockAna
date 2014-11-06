@@ -147,6 +147,7 @@ void TreeMaker::fillSummary()
       if(ent == 0){
 	TString hname = A->GetName();
 	summary->addA( (TH1F*) A->Clone((hname+"_avg")) );
+	summary->addAngle( atan(ants.at(iA)->getX()/ants.at(iA)->getZ()) );
       }
       else{
 	summary->getA(iA)->Add(A);
@@ -187,7 +188,7 @@ TH1F* TreeMaker::getEfield(TH1F* A, int num)
 {
 
   // Conversion factor for ns
-  float conv = 1e-9;
+  float conv = 1; //1e-9;
 
   // Get the binning information
   float bw   = A->GetBinWidth(1);

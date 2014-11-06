@@ -11,6 +11,7 @@
 #pragma link C++ class Antenna+;
 #pragma link C++ class MetaData+;
 #pragma link C++ class Summary+;
+#pragma link C++ class Tools+;
 
 #pragma link C++ class std::vector<Antenna>+;
 #pragma link C++ class std::vector<Antenna*>+;

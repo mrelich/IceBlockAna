@@ -38,45 +38,37 @@ rootclass = 			\
 	$(inc)/Event.h 		\
 	$(inc)/Antenna.h 	\
 	$(inc)/MetaData.h	\
-	$(inc)/Summary.h
+	$(inc)/Summary.h	\
+	$(inc)/Tools.h		\
+	$(src)/Tools.cxx
 
 obj/Event_Dict.cxx: 	$(rootclass) $(inc)/LinkDef.h
 obj/Antenna_Dict.cxx:	$(rootclass) $(inc)/LinkDef.h
 obj/MetaData_Dict.cxx:  $(rootclass) $(inc)/LinkDef.h
 obj/Summary_Dict.cxx: 	$(rootclass) $(inc)/LinkDef.h
+obj/Tools_Dict.cxx:	$(rootclass) $(inc)/LinkDef.h
 
 #---- OBJ ----#
 obj/Classes_Dict.o: 		\
 	obj/Event_Dict.cxx 	\
 	obj/Antenna_Dict.cxx 	\
 	obj/MetaData_Dict.cxx 	\
-	obj/Summary_Dict.cxx
+	obj/Summary_Dict.cxx	\
+	obj/Tools_Dict.cxx
 
 
 #---- Shared Obj ----#
-obj/Classes_Dict.so: 	 			\
-	obj/Event_Dict.cxx $(inc)/Event.h  	\
-	obj/Antenna_Dict.cxx $(inc)/Antenna.h 	\
-	obj/MetaData_Dict.cxx $(inc)/MetaData.h	\
-	obj/Summary_Dict.cxx $(inc)/Summary.h
-
-#---- ROOT Objects ----#
-#obj/Event_Dict.cxx: $(rootclass) $(inc)/LinkDef.h
-#	rootcint -f $@ -c -I$(inc) $+
-#obj/Antenna_Dict.cxx: $(rootclass) $(inc)/LinkDef.h
-#	rootcint -f $@ -c -I$(inc) $+
-#obj/MetaData_Dict.cxx: $(inc)/MetaData.h $(inc)/LinkDef_test.h
-#	rootcint -f $@ -c -I$(inc) $+
-#obj/MetaData_Dict.so: obj/MetaData_Dict.cxx $(inc)/MetaData.h
-#	$(CXX) -shared $< -o $@ -fPIC $(links)
-#obj/MyClass_Dict.so: \
-#	obj/Event_Dict.cxx $(inc)/Event.h \
-#	obj/Antenna_Dict.cxx $(inc)/Antenna.h 
-#	$(CXX) -c $< -o $@ $(SOFLAGS) $(CXXFLAGS) -Os -g1 -I$(inc)
+obj/Classes_Dict.so: 	 					\
+	obj/Event_Dict.cxx $(inc)/Event.h  			\
+	obj/Antenna_Dict.cxx $(inc)/Antenna.h 			\
+	obj/MetaData_Dict.cxx $(inc)/MetaData.h			\
+	obj/Summary_Dict.cxx $(inc)/Summary.h			\
+	obj/Tools_Dict.cxx $(inc)/Tools.h $(src)/Tools.cxx 	
 
 #---- Additional Objects ----#
 obj/Reader.o:		$(src)/Reader.cxx
 obj/TreeMaker.o:	$(src)/TreeMaker.cxx
+#obj/Tools.o:		$(src)/Tools.cxx
 
 makeOutput:			\
 	obj/Reader.o		\
