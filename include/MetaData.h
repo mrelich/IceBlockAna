@@ -20,13 +20,16 @@ class MetaData : public TObject
 
   // Set all variables
   void initialize(int nevts, int nprim, float energy,
-		  int nAnt, int nSteps, float ss){
+		  int nAnt, int nSteps, float ss,
+		  int nbunch, float tOffset){
     m_nEvents  = nevts;
     m_nPrimary = nprim;
     m_Energy   = energy;
     m_nAntenna = nAnt;
     m_nSteps   = nSteps;
     m_stepSize = ss;
+    m_nBunches = nbunch;
+    m_tOffset  = tOffset;
 
     print();
   };
@@ -40,6 +43,8 @@ class MetaData : public TObject
     std::cout<<"NTSteps:    "<<m_nSteps<<std::endl;
     std::cout<<"TStep:      "<<m_stepSize<<std::endl;
     std::cout<<"NAntenna:   "<<m_nAntenna<<std::endl;
+    std::cout<<"NBunches:   "<<m_nBunches<<std::endl;
+    std::cout<<"tOffset:    "<<m_tOffset<<std::endl;
     std::cout<<std::endl;
   };
 
@@ -50,7 +55,9 @@ class MetaData : public TObject
   void setNSteps(int steps)  { m_nSteps   = steps;  };
   void setStepSize(float ss) { m_stepSize = ss;     };
   void setNAntenna(int nAnt) { m_nAntenna = nAnt;   };
-  
+  void setNBunches(int nB)   { m_nBunches = nB;     };
+  void setTOffset(float dt)  { m_tOffset  = dt;     };
+
   // Getting
   int getNEvents()   { return m_nEvents;  };
   int getNPrimary()  { return m_nPrimary; };
@@ -58,6 +65,7 @@ class MetaData : public TObject
   int getNSteps()    { return m_nSteps;   };
   float getStepSize(){ return m_stepSize; };
   int getNAntenna()  { return m_nAntenna; };
+  int getNBunches()  { return m_nBunches; };
   
  protected:
   
@@ -72,6 +80,10 @@ class MetaData : public TObject
   
   // Store number of antenna
   int m_nAntenna;
+
+  // Bunch information
+  int m_nBunches;
+  float m_tOffset;
 
   ClassDef(MetaData, 1);
 

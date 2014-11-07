@@ -31,10 +31,15 @@ class Reader
 		   float &pEnergy,   // Primary energy
 		   int &nAntenna,    // Number of Antennas for this run
 		   int &nTSteps,     // Number of timing steps
-		   float &tStep);    // Size of timing step
+		   float &tStep,     // Size of timing step
+		   int &nbunch,      // Number of bunches simulated
+		   float &tOffset);  // Timing offset
 
   // Retrieve Event info
-  void getEventInfo(Event* evt, int nTimeSteps, float timeStep);
+  void getEventInfo(Event* evt,      // Event to store info
+		    int nTimeSteps,  // Number of time steps
+		    float timeStep,  // Time step size
+		    float scale);    // Scale to bring up to 10^9 particles
 
   
  protected:
@@ -50,6 +55,9 @@ class Reader
   int m_nSteps;
   float m_pEnergy;
   float m_tStep;
+  float m_nBunches;
+  float m_tOffset;
+  
   
 };
 

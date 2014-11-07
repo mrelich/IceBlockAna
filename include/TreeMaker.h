@@ -12,6 +12,7 @@
 #include "MetaData.h"
 #include "Reader.h"
 #include "Summary.h"
+#include "Options.h"
 
 // Root
 #include "TTree.h"
@@ -51,6 +52,8 @@ class TreeMaker
   Reader* m_reader;   // Object to read in Geant4 output
   MetaData* m_MD;     // Object for meta data
   TFile* m_outfile;   // Output file for this script
+
+  float m_scale;      // Scale factor for simulation
 
 };
 

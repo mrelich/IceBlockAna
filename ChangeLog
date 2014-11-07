@@ -1,3 +1,8 @@
+2014-11-07 Matt:
+	* Adding some plotting scripts
+	* Committing small updates to get plotting results
+	* Tagging first version
+
 2014-11-06 Matt:
 	* E-field calculated now with errors
 	* Added vector<TH1F*> to linkdef, now can read them back in interactive root mode

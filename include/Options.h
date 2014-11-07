@@ -10,9 +10,9 @@
 namespace Options
 {
 
-  const int NParticles = 1e9; // 10^9 particles in one shot
-  const int NBunches   = 5;   // Number of bunches
-
+  const int NParticles = 1e9;      // 10^9 particles in one shot
+  const int NBunches   = 5;        // Number of bunches
+  const float BunchOffset = 0.350; // ns
 
 };
 

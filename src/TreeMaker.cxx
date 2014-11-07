@@ -16,7 +16,7 @@ TreeMaker::TreeMaker(string infname,
   m_reader = new Reader(infname);
 
   // Open up an output root file
-  m_outfile = new TFile(outfname.c_str(),"recreate");
+  m_outfile = new TFile(("rootfiles/"+outfname).c_str(),"recreate");
 
 }
 
@@ -51,15 +51,22 @@ void TreeMaker::fillMetaData()
   int nAntenna   = 0;
   int nSteps     = 0;
   float stepSize = 0;
+  int nBunch     = 0;
+  float tOffset  = 0;
 
   // Set the meta data
   m_reader->getMetaData(nEvents, nPrim, Energy,
-			nAntenna, nSteps, stepSize);
+			nAntenna, nSteps, stepSize,
+			nBunch, tOffset);
   
   // Create MetaData object
   m_MD = new MetaData();
   m_MD->initialize(nEvents, nPrim, Energy,
-		 nAntenna, nSteps, stepSize);
+		   nAntenna, nSteps, stepSize,
+		   nBunch, tOffset);
+
+  // Calculate the scale factor
+  m_scale = Options::NParticles / nPrim / Options::NBunches;
 
   // Write this to the root file
   m_outfile->cd();
@@ -96,7 +103,8 @@ void TreeMaker::fillEvents()
     // Fill the antennas
     m_reader->getEventInfo(event, 
 			   m_MD->getNSteps(),
-			   m_MD->getStepSize());
+			   m_MD->getStepSize(),
+			   m_scale);
     
     // Fill the event
     tree->Fill();

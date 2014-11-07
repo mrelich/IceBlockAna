@@ -13,6 +13,7 @@
 #include "TString.h"
 #include <iostream>
 #include "TMath.h"
+#include "Options.h"
 
 class Tools : public TObject
 {
@@ -31,8 +32,6 @@ class Tools : public TObject
   // NOTE: getFT must be called first
   TH1F* getFTTD(TH1F* h_TD, TH1F* h_FD,
 		float fmin=-999, float fmax=-999);
-
-
 
   
  private:

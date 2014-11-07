@@ -26,10 +26,13 @@ Reader::Reader(string infname) :
 	   >> m_pEnergy
 	   >> m_nAnt
 	   >> m_nSteps
-	   >> m_tStep; 
+	   >> m_tStep
+	   >> m_nBunches
+	   >> m_tOffset; 
 
-  m_tStep *= 1e-9; // convert ns --> s
-  
+  m_tStep   *= 1e-9; // convert ns --> s
+  m_tOffset *= 1e-9; // convert ns --> s
+
 }
 
 //-------------------------------------------------------//
@@ -49,7 +52,8 @@ Reader::~Reader()
 //-------------------------------------------------------//
 void Reader::getMetaData(int &nEvents, int &nPrimaries,	
 			 float &pEnergy, int &nAntenna,
-			 int &nTSteps, float &tStep)
+			 int &nTSteps, float &tStep,
+			 int &nbunch, float &tOffset)
 {
 
   // Just set the values from memory
@@ -59,6 +63,8 @@ void Reader::getMetaData(int &nEvents, int &nPrimaries,
   nAntenna   = m_nAnt;
   nTSteps    = m_nSteps;
   tStep      = m_tStep;
+  nbunch     = m_nBunches;
+  tOffset    = m_tOffset;
 
 }
 
@@ -66,7 +72,7 @@ void Reader::getMetaData(int &nEvents, int &nPrimaries,
 // Retrieve event info
 //-------------------------------------------------------//
 void Reader::getEventInfo(Event* evt, int nTimeSteps,
-			  float stepSize)
+			  float stepSize, float scale)
 {
   
   // Set the kill switches
@@ -157,7 +163,7 @@ void Reader::getEventInfo(Event* evt, int nTimeSteps,
 			  stepSize,
 			  time);
 
-    antenna->fill(time, sqrt(Ax*Ax+Ay*Ay+Az*Az));
+    antenna->fill(time, sqrt(Ax*Ax+Ay*Ay+Az*Az) * scale);
 
   }
   
