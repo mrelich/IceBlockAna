@@ -7,17 +7,25 @@
 // calculated from the vector potential.                //
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 
-#include "TObject.h" 
+//#include "TObject.h" 
+#include "TNamed.h" 
 #include "TH1F.h"
+#include "TString.h"
 #include <vector>
 
-class Summary : public TObject
+class Summary : public TNamed
 {
 
  public: 
   
   // Constructor / Destructor
   Summary(){
+    this->SetName("Summary");
+    m_A.clear();
+    m_E.clear();
+  }
+  Summary(TString name){
+    this->SetName(name);
     m_A.clear();
     m_E.clear();
   };

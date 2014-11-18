@@ -163,8 +163,12 @@ void Reader::getEventInfo(Event* evt, int nTimeSteps,
 			  stepSize,
 			  time);
 
+    // Fill all components of the field
     antenna->fill(time, sqrt(Ax*Ax+Ay*Ay+Az*Az) * scale);
-
+    antenna->fillX(time, Ax * scale);
+    antenna->fillY(time, Ay * scale);
+    antenna->fillZ(time, Az * scale);
+    
   }
   
 }

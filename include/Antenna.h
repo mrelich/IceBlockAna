@@ -8,6 +8,7 @@
 
 #include "TH1F.h"
 #include "TObject.h"
+#include "TString.h"
 #include <sstream>
 #include <iostream>
 
@@ -18,15 +19,21 @@ class Antenna : public TObject
 
   // Default constructor / destructor
   Antenna(){
-    m_VP = NULL;
+    m_VP_mag = NULL;
+    m_VP_X = NULL;
+    m_VP_Y = NULL;
+    m_VP_Z = NULL;
     this->setPos(0,0,0);
     this->setRPos(0,0,0);
     m_initialized = false;
   };
   virtual ~Antenna(){     
-    if(m_VP) delete m_VP;
+    if(m_VP_mag) delete m_VP_mag;
+    if(m_VP_X) delete m_VP_X;
+    if(m_VP_Y) delete m_VP_Y;
+    if(m_VP_Z) delete m_VP_Z;
   };
-
+  
   // Constructor
   void initialize(float x, float y, float z,
 		  float xr, float yr, float zr,
@@ -39,15 +46,23 @@ class Antenna : public TObject
     
     // Hist name
     std::stringstream name;
-    name << "Ant_" << x << "_" 
+    name << "A_Ant_" << x << "_" 
 	 << y <<  "_" << z;
-    //std::cout<<"\tMaking antenna: "<<name.str()<<std::endl;
+    TString basename = TString(name.str().c_str());
+    
     // Hist min max
     float tmin = startTime - stepSize/2.;
     float tmax = tmin + nSteps * stepSize;
-    m_VP = new TH1F(name.str().c_str(),"",
-		    nSteps,tmin,tmax);
-    m_VP->Sumw2();
+
+    // Now make histograms for the X,Y,Z, Mag
+    m_VP_mag = new TH1F((basename+"_mag"),"",nSteps,tmin,tmax);			
+    m_VP_mag->Sumw2();
+    m_VP_X = new TH1F((basename+"_X"),"",nSteps,tmin,tmax);			
+    m_VP_X->Sumw2();
+    m_VP_Y = new TH1F((basename+"_Y"),"",nSteps,tmin,tmax);			
+    m_VP_Y->Sumw2();
+    m_VP_Z = new TH1F((basename+"_Z"),"",nSteps,tmin,tmax);			
+    m_VP_Z->Sumw2();
 
     // Set flag to true
     m_initialized = true;
@@ -66,15 +81,19 @@ class Antenna : public TObject
   void setZ(float z){ m_z = z; };
   
   // Getting
-  float getX() { return m_x;  };
-  float getY() { return m_y;  };
-  float getZ() { return m_z;  };
-  TH1F* getVP(){ return m_VP; };
+  float getX()  { return m_x;   };
+  float getY()  { return m_y;   };
+  float getZ()  { return m_z;   };
+  TH1F* getVP() { return m_VP_mag;  };
+  TH1F* getVPX(){ return m_VP_X; };
+  TH1F* getVPY(){ return m_VP_Y; };
+  TH1F* getVPZ(){ return m_VP_Z; };
 
   // Fill information
-  void fill(float time, float A){
-    m_VP->Fill(time, A);
-  }
+  void fill(float time, float A) { m_VP_mag->Fill(time, A); }  
+  void fillX(float time, float A){ m_VP_X->Fill(time, A);   }  
+  void fillY(float time, float A){ m_VP_Y->Fill(time, A);   }  
+  void fillZ(float time, float A){ m_VP_Z->Fill(time, A);   }  
 
   // Checker
   bool isInitialized(){ return m_initialized; };
@@ -84,7 +103,10 @@ class Antenna : public TObject
  protected:
   
   // Profile for overall result
-  TH1F* m_VP;
+  TH1F* m_VP_mag;
+  TH1F* m_VP_X;
+  TH1F* m_VP_Y;
+  TH1F* m_VP_Z;
   
   // Position 
   float m_x;

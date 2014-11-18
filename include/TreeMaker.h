@@ -45,9 +45,13 @@ class TreeMaker
   void fillSummary();
 
   // Calcualte efield -- move to package later
-  TH1F* getEfield(TH1F* A, int num);
+  TH1F* getEfield(TH1F* A);
 
  private:
+
+  // Internal method to clone histogram
+  // Maybe move to tools?
+  TH1F* getClone(TH1F* h); //, TString append);
 
   Reader* m_reader;   // Object to read in Geant4 output
   MetaData* m_MD;     // Object for meta data

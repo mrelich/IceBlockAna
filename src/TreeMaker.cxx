@@ -126,7 +126,7 @@ void TreeMaker::fillEvents()
 //--------------------------------------------------//
 void TreeMaker::fillSummary()
 {
-
+  
   // For creating the summary histograms we need to 
   // open up the event results from the output file
   TTree* tree = (TTree*) m_outfile->Get("EventInfo");
@@ -137,7 +137,10 @@ void TreeMaker::fillSummary()
   int nEnt = tree->GetEntries();
 
   // Create Summary object 
-  Summary* summary = new Summary();
+  Summary* summary  = new Summary("SummaryMag");
+  Summary* summaryX = new Summary("SummaryX");
+  Summary* summaryY = new Summary("SummaryY");
+  Summary* summaryZ = new Summary("SummaryZ");
 
   // Now loop over events and save results
   for(int ent = 0; ent<nEnt; ++ent){
@@ -149,16 +152,34 @@ void TreeMaker::fillSummary()
     // Loop over antennas and save results
     for(unsigned int iA=0; iA<ants.size(); ++iA){
 
-      TH1F* A = ants.at(iA)->getVP();
+      TH1F* A  = ants.at(iA)->getVP();
+      TH1F* Ax = ants.at(iA)->getVPX();
+      TH1F* Ay = ants.at(iA)->getVPY();
+      TH1F* Az = ants.at(iA)->getVPZ();
 
       // For first antenna, just clone it over
       if(ent == 0){
-	TString hname = A->GetName();
-	summary->addA( (TH1F*) A->Clone((hname+"_avg")) );
-	summary->addAngle( atan(ants.at(iA)->getX()/ants.at(iA)->getZ()) );
+	
+	// Clone histograms
+	summary->addA( getClone(A) );
+	summaryX->addA( getClone(Ax) );
+	summaryY->addA( getClone(Ay) );
+	summaryZ->addA( getClone(Az) );
+
+	// Save the angle
+	float angle = atan(ants.at(iA)->getX()/ants.at(iA)->getZ());
+	summary->addAngle( angle );
+	summaryX->addAngle( angle );
+	summaryY->addAngle( angle );
+	summaryZ->addAngle( angle );
+
       }
       else{
 	summary->getA(iA)->Add(A);
+	summaryX->getA(iA)->Add(Ax);
+	summaryY->getA(iA)->Add(Ay);
+	summaryZ->getA(iA)->Add(Az);
+
       }
       
     }// end loop over antennas
@@ -174,15 +195,49 @@ void TreeMaker::fillSummary()
   // the average.  Also calculate the electric field
   unsigned int nAnt = summary->getA().size();
   for(unsigned int iA=0; iA<nAnt; ++iA){
+
+    // Load histograms again
     TH1F* A = summary->getA(iA);
+    TH1F* Ax = summaryX->getA(iA);
+    TH1F* Ay = summaryY->getA(iA);
+    TH1F* Az = summaryZ->getA(iA);
+
+    // Scale them
     A->Scale(1./nEnt);
-    summary->addE( getEfield(A, iA) );
+    Ax->Scale(1./nEnt);
+    Ay->Scale(1./nEnt);
+    Az->Scale(1./nEnt);
+
+    // Get the electric field
+    summary->addE( getEfield(A) );
+    summaryX->addE( getEfield(Ax) );
+    summaryY->addE( getEfield(Ay) );
+    summaryZ->addE( getEfield(Az) );
   }
 
   // Write this object
   m_outfile->cd();
   summary->Write();
+  summaryX->Write();
+  summaryY->Write();
+  summaryZ->Write();
   delete summary;
+  delete summaryX;
+  delete summaryY;
+  delete summaryZ;
+
+}
+
+//--------------------------------------------------//
+// Get clone of histogram
+//--------------------------------------------------//
+TH1F* TreeMaker::getClone(TH1F* h) //, TString append)
+{
+
+  // Get name and append to it
+  TString hname = h->GetName(); // + append;
+  TH1F* temp    = (TH1F*) h->Clone(hname);
+  return temp;
 
 }
 
@@ -192,7 +247,7 @@ void TreeMaker::fillSummary()
 // TODO: Move to tools package
 // TODO: Change name of E-field histogram
 //--------------------------------------------------//
-TH1F* TreeMaker::getEfield(TH1F* A, int num)
+TH1F* TreeMaker::getEfield(TH1F* A)
 {
 
   // Conversion factor for ns
@@ -205,8 +260,9 @@ TH1F* TreeMaker::getEfield(TH1F* A, int num)
   int nebins  = (int) ((tmax-tmin)/bw);
 
   // Make histogram for E-field
-  stringstream name; name << "E_" << num;
-  TH1F* E = new TH1F(name.str().c_str(),"",nebins,tmin,tmax);
+  TString Ename = A->GetName();
+  Ename = "E" + Ename(1,Ename.Length());
+  TH1F* E = new TH1F(Ename,"",nebins,tmin,tmax);
   E->Sumw2();
 
   // now loop and calculate the E field
@@ -238,6 +294,26 @@ TH1F* TreeMaker::getEfield(TH1F* A, int num)
 //                              MAIN                                 //
 //###################################################################//
 
+//-----------------------------------------------------//
+// Help menu
+//-----------------------------------------------------//
+void help()
+{
+
+  cout<<"--------------------------------------------"<<endl;
+  cout<<"-i <path_to_file>"<<endl;
+  cout<<"\tSpecify the input file path"<<endl;
+  cout<<"-o <output_name>"<<endl;
+  cout<<"\tSpecify the output file name"<<endl;
+  cout<<"\tWill be written to rootfiles/"<<endl;
+  cout<<"--------------------------------------------"<<endl;
+
+}
+
+
+//-----------------------------------------------------//
+// Main
+//-----------------------------------------------------//
 int main(int argc, char** argv)
 {
 
@@ -252,8 +328,9 @@ int main(int argc, char** argv)
     else if(strcmp(argv[i], "-o") == 0)
       output = argv[++i];
     else{
-      cout<<"Option not supported"<<endl;
-      cout<<"Job will not run!   "<<endl;
+      //cout<<"Option not supported"<<endl;
+      //cout<<"Job will not run!   "<<endl;
+      help();
       return 0;
     }
   }// end loop over options
