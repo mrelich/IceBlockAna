@@ -33,7 +33,6 @@ class Tools : public TObject
   TH1F* getFTTD(TH1F* h_TD, TH1F* h_FD,
 		float fmin=-999, float fmax=-999);
 
-  
  private:
   
   //TVirtualFFT* m_FFT;     // FFT object from root

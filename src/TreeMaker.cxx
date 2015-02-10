@@ -66,7 +66,9 @@ void TreeMaker::fillMetaData()
 		   nBunch, tOffset);
 
   // Calculate the scale factor
-  m_scale = Options::NParticles / nPrim / Options::NBunches;
+  cout<<"NBunches: "<<nBunch<<endl;
+  m_scale = Options::NParticles / nPrim / nBunch;
+  //m_scale = Options::NParticles / nPrim;
 
   // Write this to the root file
   m_outfile->cd();
@@ -276,10 +278,12 @@ TH1F* TreeMaker::getEfield(TH1F* A)
 
     // Get new values including errors.
     // Treat bin-to-bin errors as uncorrelated
+    // Note: Turn off error for now to see trend
     int newbin = E->FindBin((t1+t0)/2.);
-    float Evar = (A1-A0)/(bw*conv);
-    float Eerr = sqrt(pow(A1err/(bw*conv),2) +
-		      pow(A0err/(bw*conv),2));
+    float Evar = -1*(A1-A0)/(bw*conv);
+    float Eerr = 0;
+    //float Eerr = sqrt(pow(A1err/(bw*conv),2) +
+    //		      pow(A0err/(bw*conv),2));
 
     // Reset the bin content
     E->SetBinContent(newbin, Evar);

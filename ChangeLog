@@ -1,3 +1,11 @@
+2014-02-10 Matt:
+	* Updated plotting scripts
+	* Removed bunch number from Options.h and store it in meta data
+
+2014-12-16 Matt:
+	* Investigating the width of the beam impact. Turned off errors for E-field. Remember
+		to turn them back on the future!!!
+
 2014-11-18 Matt:
 	* Adding the x, y, z information for A and E. This means we can look at the horizontal and
 		vertical polarizations.  If we want more complicated polarizations more work

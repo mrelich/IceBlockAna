@@ -51,9 +51,10 @@ void setHistAtt(TH1F* &h, TString xtitle, TString ytitle,
   h->SetLineColor(color);
   h->SetMarkerColor(color);
   h->SetMarkerStyle(marker);
+  h->SetMarkerSize(0.5);
   h->SetStats(0);
   h->SetTitle("");
-  h->SetLineWidth(2);
+  h->SetLineWidth(1);
   h->GetYaxis()->SetTitleOffset(1.5);
 
 }
